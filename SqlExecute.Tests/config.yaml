@@ -1,0 +1,30 @@
+﻿version: 1.0.0
+
+connections:
+- name: "local"
+  connectionString: "sqlite:///SqlExecute/db.sqlite3"
+
+actions:
+- action: NonQuery
+  name: "Create table"
+  parameters:
+    connection: "local"
+    queries: 
+    - |
+      CREATE TABLE IF NOT EXISTS test (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        name TEXT NOT NULL,
+        description TEXT
+      )    
+
+- action: TableLoad
+  name: "Load table"
+  parameters:
+    connection: "local"
+    file: "SqlExecute/data.csv"
+    fileFormat: "csv"
+    table: "dbo.test"
+    fieldterminator: ","
+    rowterminator: "\n"
+      
+  
