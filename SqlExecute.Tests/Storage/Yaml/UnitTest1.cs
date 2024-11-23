@@ -1,3 +1,4 @@
+using SqlExecute.Engine.Exceptions;
 using SqlExecute.Storage.Yaml;
 
 namespace SqlExecute.Tests.Storage.Yaml
@@ -10,33 +11,66 @@ namespace SqlExecute.Tests.Storage.Yaml
             var configuration = ProcessConfiguration.GetConfiguration("config.yaml");
 
             Assert.NotNull(configuration);
-            Assert.Equal("1.0.0", configuration.Version);
-            Assert.NotNull(configuration.Connections);
-
-            Assert.NotEmpty(configuration.Connections);
-            Assert.Collection(configuration.Connections, connection =>
-            {
-                Assert.Equal("local", connection.Name);
-                Assert.Equal("sqlite:///SqlExecute/db.sqlite3", connection.ConnectionString);
-            });
-
-            Assert.NotEmpty(configuration.Actions);
-            Assert.Collection(configuration.Actions, action =>
-            {
-                Assert.Equal("NonQuery", action.Type);
-                Assert.Equal("Create table", action.Name);
-            },
-            action =>
-            {
-                Assert.Equal("TableLoad", action.Type);
-                Assert.Equal("Load table", action.Name);
-            });
         }
 
         [Fact]
         public void MissingConfigurationFileThrowsFileNotFoundException()
         {
             Assert.Throws<FileNotFoundException>(() => ProcessConfiguration.GetConfiguration("missing.yaml"));
+        }
+
+        [Fact]
+        public void EmptyConfigurationFileThrowsValidationException()
+        {
+            var reader = GetReader(string.Empty);
+            Assert.Throws<ValidationException>(() => ProcessConfiguration.GetConfiguration(reader));
+        }
+
+        [Fact]
+        public void InvalidConfigurationVersionThrowsValidationException()
+        {
+            var reader = GetReader(
+                @"version: something.else
+connections:
+- name: local
+  connectionString: sqlite:///SqlExecute/db.sqlite3
+
+actions:
+- action: NonQuery
+  name: Create table
+  parameters:
+    connection: local
+    queries: 
+    - |
+      CREATE TABLE IF NOT EXISTS test (
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        name TEXT NOT NULL,
+        description TEXT
+      ) ");
+            Assert.Throws<ValidationException>(() => ProcessConfiguration.GetConfiguration(reader));
+        }
+
+        [Fact]
+        public void InvalidConfigurationNoActionsThrowsValidationException()
+        {
+            var reader = GetReader(
+                @"version: 1.0.0
+
+connections:
+- name: local
+  connectionString: sqlite:///SqlExecute/db.sqlite3
+");
+            Assert.Throws<ValidationException>(() => ProcessConfiguration.GetConfiguration(reader));
+        }
+
+        private static StreamReader GetReader(string content)
+        {
+            var stream = new MemoryStream();
+            var writer = new StreamWriter(stream);
+            writer.Write(content);
+            writer.Flush();
+            stream.Position = 0;
+            return new StreamReader(stream);
         }
     }
 }

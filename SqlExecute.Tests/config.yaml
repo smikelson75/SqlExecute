@@ -26,5 +26,7 @@ actions:
     table: "dbo.test"
     fieldterminator: ","
     rowterminator: "\n"
+    maxBatchSize: 1000
+    skipInitialRows: 1
       
   

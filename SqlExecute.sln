@@ -3,11 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlExecute", "SqlExecute\SqlExecute.csproj", "{728812E6-0410-4FC1-9829-C30E38F53182}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlExecute", "SqlExecute\SqlExecute.csproj", "{728812E6-0410-4FC1-9829-C30E38F53182}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlExecute.Storage", "SqlExecute.Storage\SqlExecute.Storage.csproj", "{B4B83C83-F627-497F-AF85-BF2896722C0B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlExecute.Storage", "SqlExecute.Storage\SqlExecute.Storage.csproj", "{B4B83C83-F627-497F-AF85-BF2896722C0B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlExecute.Tests", "SqlExecute.Tests\SqlExecute.Tests.csproj", "{A78FB53A-98CB-4F85-A488-AFFE73A83FB8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlExecute.Tests", "SqlExecute.Tests\SqlExecute.Tests.csproj", "{A78FB53A-98CB-4F85-A488-AFFE73A83FB8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SqlExecute.Engine", "SqlExecute.Engine\SqlExecute.Engine.csproj", "{AFE5D155-5010-4B6C-A5EF-E427358E1EA1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{A78FB53A-98CB-4F85-A488-AFFE73A83FB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A78FB53A-98CB-4F85-A488-AFFE73A83FB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A78FB53A-98CB-4F85-A488-AFFE73A83FB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AFE5D155-5010-4B6C-A5EF-E427358E1EA1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AFE5D155-5010-4B6C-A5EF-E427358E1EA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AFE5D155-5010-4B6C-A5EF-E427358E1EA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AFE5D155-5010-4B6C-A5EF-E427358E1EA1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
