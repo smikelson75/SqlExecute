@@ -17,6 +17,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SqlExecute.Engine.Sqlite\SqlExecute.Engine.Sqlite.csproj" />
     <ProjectReference Include="..\SqlExecute.Engine\SqlExecute.Engine.csproj" />
     <ProjectReference Include="..\SqlExecute.Storage\SqlExecute.Storage.csproj" />
   </ItemGroup>

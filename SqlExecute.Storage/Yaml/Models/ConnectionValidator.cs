@@ -37,6 +37,10 @@ namespace SqlExecute.Storage.Yaml.Models
                 .NotEmpty()
                 .WithMessage("A connection name is required.");
 
+            RuleFor(connection => connection.Provider)
+                .NotEmpty()
+                .WithMessage("A provider is required.");
+
             RuleFor(connection => connection.ConnectionString)
                 .NotEmpty()
                 .WithMessage("A connection string is required.");

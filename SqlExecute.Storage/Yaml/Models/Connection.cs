@@ -12,6 +12,12 @@
         public string Name { get; set; } = string.Empty;
 
         /// <summary>
+        /// Gets or sets the provider.
+        /// </summary>
+        [YamlMember(Alias = "provider")]
+        public string Provider { get; set; } = string.Empty;
+
+        /// <summary>
         /// Gets or sets the connection string.
         /// </summary>
         [YamlMember(Alias = "connectionString")]

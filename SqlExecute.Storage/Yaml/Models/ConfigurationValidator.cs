@@ -46,6 +46,13 @@ namespace SqlExecute.Storage.Yaml.Models
                 .Matches(@"^1\.0\.0$")
                 .WithMessage("The configuration version must be 1.0.0.");
 
+            RuleFor(configuration => configuration.Connections)
+                .NotEmpty()
+                .WithMessage("At least one connection is required.");
+
+            RuleForEach(configuration => configuration.Connections)
+                .SetValidator(new ConnectionValidator());
+
             RuleFor(configuration => configuration.Actions)
                 .NotEmpty()
                 .WithMessage("At least one action is required.");
