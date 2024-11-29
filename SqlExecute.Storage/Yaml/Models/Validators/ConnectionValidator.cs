@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 
 
-namespace SqlExecute.Storage.Yaml.Models
+namespace SqlExecute.Storage.Yaml.Models.Validators
 {
     /// <summary>
     /// Validator for the <see cref="Connection"/> class.

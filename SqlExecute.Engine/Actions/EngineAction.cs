@@ -7,6 +7,7 @@ namespace SqlExecute.Engine.Actions
     public class EngineAction
     {
         public RepositoryCollection Connections { get; private set; } = null!;
+        public ActionCollection Actions { get; } = null!;
     }
 
     public enum ActionTypes

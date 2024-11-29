@@ -15,7 +15,7 @@ namespace SqlExecute.Tests.Engine.Sqlite.SqliteRepositoryTests
             Collection = [];
             Configuration = ProcessConfiguration.GetConfiguration("config.yaml");
 
-            var builder = new RepositoryBuilder();
+            var builder = new RepositoryFactory();
             builder.Register("sqlite", new SqliteRepositoryBuilder());
             foreach (var connection in Configuration.Connections)
             {

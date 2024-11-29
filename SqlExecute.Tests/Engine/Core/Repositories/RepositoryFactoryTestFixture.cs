@@ -1,13 +1,13 @@
 ﻿using SqlExecute.Storage.Yaml;
 using SqlExecute.Storage.Yaml.Models;
 
-namespace SqlExecute.Tests.Engine.Core.RepositoryBuilderTests
+namespace SqlExecute.Tests.Engine.Core.Repositories
 {
-    public class RepositoryBuilderTestFixture
+    public class RepositoryFactoryTestFixture
     {
         public Configuration Configuration { get; private set; }
 
-        public RepositoryBuilderTestFixture()
+        public RepositoryFactoryTestFixture()
         {
             Configuration = ProcessConfiguration.GetConfiguration("config.yaml");
         }

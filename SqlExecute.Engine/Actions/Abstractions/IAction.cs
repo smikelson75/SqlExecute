@@ -8,6 +8,9 @@ namespace SqlExecute.Engine.Actions.Abstractions
 {
     public interface IAction
     {
+        string Name { get; }
+        ActionStatus Status { get; }
         Task<int> ExecuteAsync();
+
     }
 }

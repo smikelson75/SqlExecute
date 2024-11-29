@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace SqlExecute.Engine.Exceptions
 {
-    public class ConnectionNotFoundException(string key) : Exception($"Unable to find connection \"{key}\".")
+    public class RepositoryNotFoundException(string key) : Exception($"Unable to find connection \"{key}\".")
     {
     }
 }

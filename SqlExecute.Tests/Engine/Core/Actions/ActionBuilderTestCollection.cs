@@ -1,4 +1,4 @@
-﻿namespace SqlExecute.Tests.Engine.Core.ActionBuilderTests
+﻿namespace SqlExecute.Tests.Engine.Core.Actions
 {
     [CollectionDefinition("ActionBuilderTests")]
     public class ActionBuilderTestCollection : ICollectionFixture<ActionBuilderTestFixture>

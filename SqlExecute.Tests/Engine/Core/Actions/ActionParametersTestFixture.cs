@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace SqlExecute.Tests.Engine.Core.ActionParametersTests
+namespace SqlExecute.Tests.Engine.Core.Actions
 {
     public class ActionParametersTestFixture
     {

@@ -16,36 +16,13 @@ namespace SqlExecute.Engine.Actions
             Repositories = collection;
         }
 
-        public void Register(string key, IActionBuilderStrategy strategy)
-        {
-            ArgumentNullException.ThrowIfNullOrWhiteSpace(key);
-            ArgumentNullException.ThrowIfNull(strategy);
-
-            if (ActionBuilders.ContainsKey(key))
-            {
-                throw new ActionAlreadyExistsException($"Action builder strategy with key {key} already exists.");
-            }
-
-            ActionBuilders[key] = strategy;
-        }
-
         public IAction Build(string name, string type, ActionParameters parameters)
         {
-            switch (type)
+            return type.ToLower() switch
             {
-                case "nonquery":
-
-                    return NonQueryAction.Create(name, parameters, (connection) =>
-                    {
-                        if (Repositories.ContainsKey(connection))
-                            return Repositories.Get(connection);
-
-                        throw new ConnectionNotFoundException(connection);
-                    });
-
-                default:
-                    throw new ActionNotFoundException(type);
-            }
+                "nonquery" => NonQueryAction.Create(name, parameters, (connection) => Repositories.Get(connection)),
+                _ => throw new ActionNotFoundException(type),
+            };
         }
     }
 }

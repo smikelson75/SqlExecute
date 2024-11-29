@@ -3,14 +3,14 @@ using SqlExecute.Engine.Repositories.Abstractions;
 using SqlExecute.Engine.Sqlite;
 using SqlExecute.Storage.Yaml.Models;
 
-namespace SqlExecute.Tests.Engine.Core.RepositoryBuilderTests
+namespace SqlExecute.Tests.Engine.Core.Repositories
 {
-    [Collection("RepositoryBuilderTests")]
-    public class RepositoryBuilderTests
+    [Collection("RepositoryFactoryTests")]
+    public class RepositoryFactoryTests
     {
         private readonly Configuration _configuration;
 
-        public RepositoryBuilderTests(RepositoryBuilderTestFixture fixture)
+        public RepositoryFactoryTests(RepositoryFactoryTestFixture fixture)
         {
             _configuration = fixture.Configuration;
         }
@@ -27,8 +27,8 @@ namespace SqlExecute.Tests.Engine.Core.RepositoryBuilderTests
                     Assert.NotNull(connection.ConnectionString);
                 });
 
-            var repositories = new RepositoryCollection();
-            var builder = new RepositoryBuilder();
+            var repositories = new SqlExecute.Engine.Repositories.RepositoryCollection();
+            var builder = new RepositoryFactory();
             builder.Register("sqlite", new SqliteRepositoryBuilder());
             foreach (var connection in _configuration.Connections)
             {
