@@ -1,12 +1,18 @@
 ﻿using System.Data.Common;
+using System.Reflection;
+using SqlExecute.Engine.Actions;
 using SqlExecute.Engine.Repositories;
 
 namespace SqlExecute.Engine
 {
-    public class Engine(RepositoryCollection connections)
+    public class Engine(RepositoryFactory factory)
     {
-        private readonly RepositoryCollection _connections = connections;
+        public ActionCollection Actions { get; } = [];
 
 
+        public static Engine Create(string filePath)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

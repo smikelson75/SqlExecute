@@ -31,13 +31,12 @@ namespace SqlExecute.Tests.Engine.Core.Actions
             }
         }
 
-        [Fact]
-        public void ThrowArgumentNullExceptionWhenActionParameterValueIsNull()
+        [Theory]
+        [InlineData(null)]
+        public void ThrowArgumentNullExceptionWhenActionParameterValueIsNull(string key)
         {
             var actionParameter = new ActionParameters();
-#pragma warning disable CS8625 // Cannot convert null literal to non-nullable reference type.
-            _ = Assert.Throws<ArgumentNullException>(() => actionParameter.AddParameter("something", null));
-#pragma warning restore CS8625 // Cannot convert null literal to non-nullable reference type.
+            _ = Assert.Throws<ArgumentNullException>(() => actionParameter.AddParameter("something", key));
         }
 
         [Theory]
@@ -70,13 +69,13 @@ namespace SqlExecute.Tests.Engine.Core.Actions
         }
 
         [Fact]
-        public void ThrowActionParameterInvalidRequestTypeExceptionWhenGetParameterTypeRequestedDoesNotMatchValueTypeReturned()
+        public void ThrowInvalidCastExceptionWhenGetParameterTypeRequestedDoesNotMatchValueTypeReturned()
         {
             var actionParameter = new ActionParameters();
 
             actionParameter.AddParameter("something", 1234);
 
-            _ = Assert.Throws<ActionParameterInvalidRequestTypeException>(() => actionParameter.GetParameter<string>("something"));
+            _ = Assert.Throws<InvalidCastException>(() => actionParameter.GetParameter<string>("something"));
         }
     }
 }

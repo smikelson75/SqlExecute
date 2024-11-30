@@ -18,14 +18,6 @@ namespace SqlExecute.Tests.Engine.Core
             Collection = [];
             Configuration = ProcessConfiguration.GetConfiguration("config.yaml");
 
-            foreach (var action in Configuration.Actions)
-            {
-                foreach (var parameter in action.Parameters)
-                {
-                    Parameters.AddParameter(parameter.Key, parameter.Value);
-                }
-            }
-
             var builder = new RepositoryFactory();
             builder.Register("sqlite", new SqliteRepositoryBuilder());
             foreach (var connection in Configuration.Connections)

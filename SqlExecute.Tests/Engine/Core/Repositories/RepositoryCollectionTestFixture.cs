@@ -53,7 +53,7 @@ namespace SqlExecute.Tests.Engine.Core.Repositories
             Dispose(false);
         }
 
-        public Task<int> ExecuteNonQueryAsync(string query)
+        public Task<int> ExecuteNonQueryAsync(params string[] queries)
         {
             throw new NotImplementedException();
         }

@@ -29,6 +29,6 @@ namespace SqlExecute.Engine.Repositories.Abstractions
         /// </summary>
         /// <param name="query">The SQL query to execute.</param>
         /// <returns>A task that represents the asynchronous operation, containing the number of rows affected.</returns>
-        Task<int> ExecuteNonQueryAsync(string query);
+        Task<int> ExecuteNonQueryAsync(params string[] queries);
     }
 }

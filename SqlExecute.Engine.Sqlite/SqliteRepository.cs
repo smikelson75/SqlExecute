@@ -19,16 +19,58 @@ namespace SqlExecute.Engine.Sqlite
                 await _connection.OpenAsync();
         }
 
-        public async Task<int> ExecuteNonQueryAsync(string query)
+        protected async Task<int> ExecuteNonQueryAsync(string query)
         {
             await OpenAsync();
 
-            using var command = _connection.CreateCommand();
-            command.CommandText = query;
-            var result = await command.ExecuteNonQueryAsync();
+            try
+            {
+                using var command = _connection.CreateCommand();
+                command.CommandText = query;
+                var result = await command.ExecuteNonQueryAsync();
 
-            await CloseAsync();
-            return result;
+                return result;
+            }
+            catch (SQLiteException ex)
+            {
+                throw new InvalidOperationException($"Unable to execute query against database. ({query})", ex);
+            }
+        }
+
+        public async Task<int> ExecuteNonQueryAsync(params string[] queries)
+        {
+            var tasks = new List<Task<int>>();
+            var exceptions = new List<Exception>();
+
+            await OpenAsync();
+
+            foreach (var query in queries)
+            {
+                tasks.Add(
+                    Task.Run(async () =>
+                    {
+                        try
+                        {
+                            return await ExecuteNonQueryAsync(query);
+                        }
+                        catch (Exception ex)
+                        {
+                            lock(exceptions)
+                            {
+                                exceptions.Add(ex);
+                            }
+
+                            return 0;
+                        }
+                    }));
+            }
+
+            int[] results = await Task.WhenAll(tasks);
+
+            if (exceptions.Any())
+                throw new AggregateException("One or more processes failed to complete. See inner execptions for details.", exceptions);
+
+            return results.Sum();
         }
 
         public async Task CloseAsync()

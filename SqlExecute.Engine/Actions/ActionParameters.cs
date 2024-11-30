@@ -60,7 +60,7 @@ namespace SqlExecute.Engine.Actions
         /// </summary>
         /// <param name="key">The key to locate in the collection.</param>
         /// <param name="expectedType">The expected type of the parameter value.</param>
-        /// <returns>true if the collection contains a parameter with the key and type; otherwise, false.</returns>
+        /// <returns><c>true</c> if the collection contains a parameter with the key and type; otherwise, <c>false</c>.</returns>
         public bool ContainsKey(string key, Type expected)
         {
             if (!Parameters.TryGetValue(key, out object? value))
@@ -81,16 +81,31 @@ namespace SqlExecute.Engine.Actions
             return expected == value.GetType();
         }
 
+        /// <summary>
+        /// Gets the generic type argument of the specified type.
+        /// </summary>
+        /// <param name="expected">The type to get the generic argument from.</param>
+        /// <returns>The generic type argument, or null if none exists.</returns>
         private static Type? GetGenericType(Type expected)
         {
             return expected.GetGenericArguments().FirstOrDefault();
         }
 
+        /// <summary>
+        /// Determines whether the specified type is a generic list.
+        /// </summary>
+        /// <param name="expected">The type to check.</param>
+        /// <returns><c>true</c> if the type is a generic list; otherwise, <c>false</c>.</returns>
         private static bool IsGenericList(Type expected)
         {
             return expected.IsGenericType && expected.GetGenericTypeDefinition() == typeof(List<>);
         }
 
+        /// <summary>
+        /// Determines whether the generic argument of the specified type is of type object.
+        /// </summary>
+        /// <param name="valueType">The type to check.</param>
+        /// <returns><c>true</c> if the generic argument is of type object; otherwise, <c>false</c>.</returns>
         private static bool IsGenericArgumentObject(Type valueType)
         {
             return valueType.GetGenericArguments().Length == 1 && valueType.GetGenericArguments().FirstOrDefault() == typeof(object);
@@ -113,6 +128,7 @@ namespace SqlExecute.Engine.Actions
         /// <returns>The parameter value associated with the specified key.</returns>
         /// <exception cref="ActionParameterNotFoundException">Thrown when the key is not found in the collection.</exception>
         /// <exception cref="ActionParameterInvalidRequestTypeException">Thrown when the type of the parameter value does not match the requested type.</exception>
+        /// <exception cref="InvalidCastException">Thrown when the conversion is not possible.</exception>
         public TReturn GetParameter<TReturn>(string key)
         {
             if (!Parameters.TryGetValue(key, out object? value))
@@ -125,7 +141,36 @@ namespace SqlExecute.Engine.Actions
                 return @return;
             }
 
-            throw new ActionParameterInvalidRequestTypeException(typeof(TReturn), value.GetType());
+            return ConvertListObjects<TReturn>(value);
+        }
+
+        /// <summary>
+        /// Converts a list of objects to a strongly-typed list of the specified type.
+        /// </summary>
+        /// <typeparam name="TReturn">The type of the list to return.</typeparam>
+        /// <param name="value">The list of objects to convert.</param>
+        /// <returns>A strongly-typed list of the specified type.</returns>
+        /// <exception cref="InvalidCastException">Thrown when the conversion is not possible.</exception>
+        private static TReturn ConvertListObjects<TReturn>(object value)
+        {
+            if (!IsGenericList(typeof(TReturn)))
+                throw new InvalidCastException($"Unable to cast to {typeof(TReturn).Name}");
+
+            var expectedElementType = GetGenericType(typeof(TReturn));
+            var valueType = value.GetType();
+
+            if (!IsGenericList(valueType) || !IsGenericArgumentObject(valueType))
+                throw new InvalidCastException($"Unable to cast to {typeof(TReturn).Name}");
+
+            var listObjects = (List<object>)value;
+            var convertedList = (IList)Activator.CreateInstance(typeof(List<>).MakeGenericType(expectedElementType!))!;
+
+            foreach (var item in listObjects)
+            {
+                convertedList.Add(Convert.ChangeType(item, expectedElementType!));
+            }
+
+            return (TReturn)convertedList;
         }
 
         /// <summary>
@@ -168,6 +213,11 @@ namespace SqlExecute.Engine.Actions
             {
                 AddParameter(parameter.Key, parameter.Value);
             }
+        }
+
+        public void Clear()
+        {
+            Parameters.Clear();
         }
     }
 }

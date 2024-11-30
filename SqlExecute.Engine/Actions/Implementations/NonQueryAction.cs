@@ -5,7 +5,7 @@ using SqlExecute.Engine.Repositories.Abstractions;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace SqlExecute.Engine.Actions.Impementations
+namespace SqlExecute.Engine.Actions.Implementations
 {
     /// <summary>
     /// Represents an action that executes non-query SQL commands.
@@ -56,7 +56,7 @@ namespace SqlExecute.Engine.Actions.Impementations
         /// <param name="name">The name of the action.</param>
         /// <param name="repository">The repository used to execute the queries.</param>
         /// <param name="queries">The SQL queries to be executed.</param>
-        protected NonQueryAction(Guid id, string name, IRepositoryAsync repository, params string[] queries)
+        internal NonQueryAction(Guid id, string name, IRepositoryAsync repository, params string[] queries)
         {
             _identity = new Entity<Guid>(id);
             Name = name;
@@ -70,7 +70,7 @@ namespace SqlExecute.Engine.Actions.Impementations
         /// <param name="name">The name of the action.</param>
         /// <param name="repository">The repository used to execute the queries.</param>
         /// <param name="queries">The SQL queries to be executed.</param>
-        protected NonQueryAction(string name, IRepositoryAsync repository, params string[] queries) : this(Guid.NewGuid(), name, repository, queries)
+        internal NonQueryAction(string name, IRepositoryAsync repository, params string[] queries) : this(Guid.NewGuid(), name, repository, queries)
         { }
 
         /// <summary>
@@ -99,49 +99,6 @@ namespace SqlExecute.Engine.Actions.Impementations
 
             Status = ActionStatus.Complete;
             return result;
-        }
-
-        /// <summary>
-        /// Creates a new instance of the <see cref="NonQueryAction"/> class with the specified parameters.
-        /// </summary>
-        /// <param name="name">The name of the action.</param>
-        /// <param name="parameters">The parameters for the action.</param>
-        /// <param name="repository">A function to get the repository based on the connection string.</param>
-        /// <returns>A new instance of the <see cref="NonQueryAction"/> class.</returns>
-        /// <exception cref="ArgumentException">Thrown when required parameters are missing or invalid.</exception>
-        public static NonQueryAction Create(
-            string name,
-            ActionParameters parameters,
-            Func<string, IRepositoryAsync> repository)
-        {
-            if (!parameters.ContainsKey("connection", typeof(string)))
-                throw new ArgumentException("NonQuery action requires a connection of string type");
-
-            if (!parameters.ContainsKey("queries", typeof(List<string>)))
-                throw new ArgumentException("NonQuery action requires at least one query");
-
-            List<string> queries = GetQueryList(parameters);
-
-            return new NonQueryAction(
-                name,
-                repository(parameters.GetParameter<string>("connection")),
-                [.. queries]);
-        }
-
-        private static List<string> GetQueryList(ActionParameters parameters)
-        {
-            var queryObjects = parameters.GetParameter<List<object>>("queries");
-            var queries = new List<string>();
-            queryObjects.ForEach((query) =>
-            {
-                if (query is not string value)
-                {
-                    throw new ActionParameterInvalidRequestTypeException(typeof(string), query.GetType());
-                }
-
-                queries.Add(value);
-            });
-            return queries;
         }
     }
 }
